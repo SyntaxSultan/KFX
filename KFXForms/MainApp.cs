@@ -43,7 +43,7 @@ namespace KFXForms
         }
 
 
-        // wielki test 
+    
 
         private XPCollection xpCollection;
 
@@ -95,7 +95,7 @@ namespace KFXForms
                     uow.Delete(users);
                     // Zatwierdzenie zmian w bazie danych
                     uow.CommitChanges();
-                    // Odświeżenie kolekcji danych
+                    // Odświeżenie danych
                     xpCollection.Reload();
                 }
             }
