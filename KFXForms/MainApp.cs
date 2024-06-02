@@ -14,6 +14,7 @@ using DevExpress.Utils;
 using DevExpress.XtraEditors;
 using static DevExpress.XtraEditors.Mask.MaskSettings;
 
+
 namespace KFXForms
 {
     public partial class MainApp : DevExpress.XtraEditors.XtraForm
@@ -39,15 +40,10 @@ namespace KFXForms
                 boolActivate.EditValue = users.Activate;
 
             }
-
-
-
-
-            // throw new NotImplementedException();
         }
 
 
-
+        // wielki test 
 
         private XPCollection xpCollection;
 
