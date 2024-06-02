@@ -27,23 +27,35 @@ namespace KFXForms
             gridView1.FocusedRowChanged += GridView1_FocusedRowChanged;
         }
 
+        // Metoda obsługująca zdarzenie zmiany zaznaczonego wiersza w GridView.
         private void GridView1_FocusedRowChanged(object sender, DevExpress.XtraGrid.Views.Base.FocusedRowChangedEventArgs e)
         {
-
+            // Pobranie aktualnie zaznaczonego wiersza jako obiekt typu CustomerClient.
             var users = gridView1.GetFocusedRow() as CustomerClient;
+
+            // Sprawdzenie, czy obiekt nie jest null (czyli czy zaznaczony wiersz zawiera dane typu CustomerClient).
             if (users != null)
             {
+                // Przypisanie wartości pola Login do kontrolki txtLogin.
                 txtLogin.Text = users.Login;
-                txtPassword.Text = users.Password;
-                txtExpiryDate.EditValue = users.ExpiryDate;
-                txtHost.Text = users.Host;
-                boolActivate.EditValue = users.Activate;
 
+                // Przypisanie wartości pola Password do kontrolki txtPassword.
+                txtPassword.Text = users.Password;
+
+                // Przypisanie wartości pola ExpiryDate do kontrolki txtExpiryDate (może być to pole edycyjne typu DataTime).
+                txtExpiryDate.EditValue = users.ExpiryDate;
+
+                // Przypisanie wartości pola Host do kontrolki txtHost.
+                txtHost.Text = users.Host;
+
+                // Przypisanie wartości pola Activate do kontrolki boolActivate (może być to pole edycyjne typu bool lub checkbox).
+                boolActivate.EditValue = users.Activate;
             }
         }
 
 
-    
+
+
 
         private XPCollection xpCollection;
 
