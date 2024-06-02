@@ -11,7 +11,7 @@ namespace KFXForms.Properties
             // Do not place any code here.
         }
 
-        // 
+
 
         string login;
         [Size(50)]

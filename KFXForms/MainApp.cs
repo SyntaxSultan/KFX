@@ -14,7 +14,6 @@ using DevExpress.Utils;
 using DevExpress.XtraEditors;
 using static DevExpress.XtraEditors.Mask.MaskSettings;
 
-
 namespace KFXForms
 {
     public partial class MainApp : DevExpress.XtraEditors.XtraForm
@@ -53,27 +52,26 @@ namespace KFXForms
             }
         }
 
-
-
-
-
         private XPCollection xpCollection;
 
         private void MainApp_Load(object sender, EventArgs e)
         {
-
-
             const string connectionString = "XpoProvider=MySql;server=truenas.local;user=admin;database=KFX;port=3306;password=Init1234!;";
 
-
-            XpoDefault.DataLayer = XpoDefault.GetDataLayer(connectionString, AutoCreateOption.DatabaseAndSchema);
-            //IDataLayer dataLayer = XpoDefault.GetDataLayer(connectionString, AutoCreateOption.None);
-
-            // metoda która pobiere dane i przypsuje je do siatki 
-            LoadData();
-
+            try
+            {
+                XpoDefault.DataLayer = XpoDefault.GetDataLayer(connectionString, AutoCreateOption.DatabaseAndSchema);
+                // metoda która pobiere dane i przypsuje je do siatki 
+                LoadData();
+            }
+            catch (Exception)
+            {
+                // Wyświetlenie okienka z informacją o błędzie połączenia z bazą danych
+                XtraMessageBox.Show("Nie można połączyć się z bazą danych. Aplikacja zostanie zamknięta.", "Błąd połączenia", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                // Zamknięcie aplikacji po naciśnięciu "OK"
+                Application.Exit();
+            }
         }
-
 
         public void LoadData()
         {
@@ -90,7 +88,6 @@ namespace KFXForms
             // Wyświetlenie pytania o potwierdzenie usunięcia 
             var dlg = XtraMessageBox.Show($"Do you want to delete user <b><color=red>selected user?</color></b>", "Message", MessageBoxButtons.YesNo, MessageBoxIcon.Question, DevExpress.Utils.DefaultBoolean.True);
 
-            //var dlg = XtraMessageBox.Show("Do you want to delete selected user?", "Message", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1);
             // Sprawdzenie czy użytkownik potwierdził usunięcie
             if (dlg == DialogResult.Yes)
             {
@@ -115,34 +112,40 @@ namespace KFXForms
 
         private void btnSave_Click(object sender, EventArgs e)
         {
+            // Tworzenie nowej jednostki pracy (UnitOfWork) dla zarządzania operacjami bazodanowymi.
             using (var uow = new UnitOfWork())
             {
+                // Tworzenie nowego obiektu CustomerClient powiązanego z jednostką pracy.
                 var users = new CustomerClient(uow);
 
+                // Przypisanie wartości z kontrolek formularza do właściwości obiektu CustomerClient.
                 users.Login = txtLogin.Text;
                 users.Password = txtPassword.Text;
                 users.ExpiryDate = DateTime.Parse(txtExpiryDate.EditValue.ToString());
                 users.Host = txtHost.Text;
                 users.Activate = (bool)boolActivate.EditValue;
 
-
+                // Sprawdzenie, czy użytkownik o podanym loginie już istnieje w bazie danych.
                 var isExisted = uow.Query<CustomerClient>()
                     .Where(x => x.Login == txtLogin.Text).ToList().Count > 0;
 
+                // Jeśli użytkownik o podanym loginie już istnieje, wyświetlenie komunikatu i zakończenie metody.
                 if (isExisted)
                 {
                     XtraMessageBox.Show($" Save it? {users.Login}");
                     txtLogin.Focus();
                     return;
-
                 }
 
+                // Zatwierdzenie zmian w bazie danych.
                 uow.CommitChanges();
+
+                // Ponowne załadowanie kolekcji danych, aby uwzględnić nowo dodane zmiany.
                 xpCollection.Reload();
-                XtraMessageBox.Show($" Save Successfull", "Message");
 
+                // Wyświetlenie komunikatu o pomyślnym zapisaniu danych.
+                XtraMessageBox.Show($" Save Successful", "Message");
             }
-
         }
 
         private void btnUpdate_Click(object sender, EventArgs e)
@@ -188,13 +191,11 @@ namespace KFXForms
 
         private void btnAdd_Click(object sender, EventArgs e)
         {
-
             txtLogin.Text = "";
             txtPassword.Text = "";
             txtExpiryDate.Text = "";
             txtHost.Text = "";
             boolActivate.EditValue = true;
-
         }
     }
 }
