@@ -51,7 +51,7 @@ namespace KFXForms
                 boolActivate.EditValue = users.Activate;
             }
         }
-
+        // Deklaracja zmiennej przechowującej kolekcję obiektów typu CustomerClient zarządzaną przez XPO.
         private XPCollection xpCollection;
 
         private void MainApp_Load(object sender, EventArgs e)
@@ -188,6 +188,12 @@ namespace KFXForms
                 }
             }
         }
+
+        /// <summary>
+        /// Czyszczenie pól tekstowych i ustawienie wartości domyślnych dla nowego rekordu.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
 
         private void btnAdd_Click(object sender, EventArgs e)
         {
